@@ -64,6 +64,54 @@
   .ver { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
   .shot { border: 2px solid var(--ink); border-radius: 22px; overflow: hidden; background: var(--cream); }
 
+  /* 첫 화면 움직이는 시연: 720×450 무대를 칸 너비에 맞춰 통째로 줄인다(크기·색은 앱 Layout·Palette 값) */
+  .demo { position: relative; height: 0; padding-top: 62.5%; }
+  .stage { position: absolute; left: 0; top: 0; width: 720px; height: 450px; transform-origin: 0 0; overflow: hidden;
+           font-family: var(--title); font-weight: 400; line-height: 1.3; background: var(--cream); }
+  .stage svg { display: block; }
+  .blob { position: absolute; border-radius: 50%; }
+  .b1 { left: -90px; bottom: -150px; width: 430px; height: 430px; background: #FBEDE6; }
+  .b2 { right: -70px; top: -130px; width: 380px; height: 300px; background: #F7EFC9; }
+  .win { position: absolute; left: 36px; top: 64px; width: 330px; height: 200px; background: #fff; border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .win .bar { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1.5px solid var(--line); font-size: 12px; color: var(--muted); }
+  .win .bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .win .bar span { flex: 1; text-align: center; padding-right: 39px; }
+  .file { position: absolute; top: 56px; width: 100px; text-align: center; font-size: 12px; }
+  .f1 { left: 20px; } .f2 { left: 140px; opacity: 0; }
+  .thumb { width: 84px; height: 60px; margin: 0 auto 6px; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
+  .thumb svg, .ghost svg { width: 100%; height: 100%; }
+  .file span { display: inline-block; padding: 1px 6px; border-radius: 5px; }
+  .f2 span { background: var(--yellow); }
+  .panel { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 112px; overflow: hidden;
+           background: var(--cream); border: 2px solid var(--ink); border-right: 0; border-radius: 18px 0 0 18px; }
+  .icon, .ring { position: absolute; right: 0; top: 50%; width: 42px; height: 42px; margin-top: -21px; display: grid; place-items: center; }
+  .icon img { width: 37px; height: 37px; max-width: none; }
+  .ring { opacity: 0; }
+  .rows { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 162px; padding: 8px; }
+  .rows .hd { height: 38px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; color: var(--muted); opacity: 0; }
+  .row { height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 8px; font-size: 14px; opacity: 0;
+         border: 2px solid transparent; border-radius: 10px; transition: background-color .18s, border-color .18s; }
+  .row b { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 10px; font-weight: 400; flex: none; }
+  .row em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--muted); }
+  .row.on, .opt.on { background: var(--yellow); border-color: var(--ink); }
+  .bubble { position: absolute; right: 0; top: 0; width: 258px; height: 108px; display: flex; align-items: center; gap: 12px; padding: 0 16px; font-size: 13px; opacity: 0; }
+  .bubble i { width: 34px; height: 34px; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; flex: none; }
+  .opts { position: absolute; left: 386px; top: 135px; width: 164px; padding: 8px; background: var(--cream);
+          border: 2px solid var(--ink); border-radius: 18px; opacity: 0; transition: opacity .12s ease-out; }
+  .opts.open { opacity: 1; transition-duration: .2s; }
+  .opt { height: 36px; display: flex; align-items: center; padding: 0 12px; font-size: 13px;
+         border: 2px solid transparent; border-radius: 9px; transition: background-color .18s, border-color .18s; }
+  .opt small { margin-left: auto; font-size: 10px; display: none; }
+  .opt.on small { display: inline; }
+  .flow { position: absolute; left: 36px; bottom: 30px; display: flex; gap: 4px; padding: 4px; background: #fff;
+          border: 2px solid var(--ink); border-radius: 999px; font-size: 13px; }
+  .flow span { padding: 3px 12px; border-radius: 999px; color: var(--muted); transition: background-color .2s, color .2s; }
+  .flow span.on { background: var(--yellow); color: var(--ink); }
+  .hand { position: absolute; left: 0; top: 0; opacity: 0; transform: translate(330px, 430px); }
+  .arrow { position: absolute; left: -2px; top: -2px; width: 19px; height: 27px; transform-origin: 2px 2px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.3)); }
+  .ghost { position: absolute; left: -42px; top: -30px; width: 84px; height: 60px; border: 1.5px solid var(--ink); border-radius: 6px;
+           overflow: hidden; opacity: 0; box-shadow: 0 10px 20px rgba(0,0,0,.16); }
+
   /* 단계 */
   .head { margin-bottom: 36px; }
   .head p { margin-top: 10px; }
@@ -112,7 +160,7 @@
     nav { display: none; }
     section { padding: 64px 0; }
   }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn, .demo * { transition: none !important; } }
 </style>
 </head>
 <body>
@@ -146,7 +194,51 @@
       </div>
       <p class="ver">무료 · 버전 0.1.0 · <a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
     </div>
-    <div class="shot"><img src="images/hero.png" width="1600" height="1000" alt="사진을 끌어 와 화면 오른쪽 끝 선택판의 PNG 줄, 1MB 이하 보기에 놓으려는 모습"></div>
+    <div class="shot demo" role="img" aria-label="사진을 끌어 화면 오른쪽 끝 탭에 가져가면 선택판이 펼쳐지고, PNG 줄의 1MB 이하에 놓으면 원본 옆에 PNG 파일이 새로 생기는 모습">
+      <div class="stage" aria-hidden="true">
+        <svg width="0" height="0" style="position:absolute"><defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FC9FF"/><stop offset="1" stop-color="#FFD9C2"/></linearGradient>
+          <symbol id="sea" viewBox="0 0 84 60">
+            <rect width="84" height="60" fill="url(#sky)"/><circle cx="62" cy="20" r="8" fill="#FFE27A"/>
+            <path d="M0 36Q14 30 28 36T56 36T84 34V60H0Z" fill="#4DA3FF"/><path d="M0 44Q14 39 28 44T56 44T84 42V60H0Z" fill="#2E86E0"/>
+            <path d="M0 52Q21 46 42 52T84 50V60H0Z" fill="#7CCB8A"/>
+          </symbol>
+        </defs></svg>
+        <div class="blob b1"></div><div class="blob b2"></div>
+        <div class="win">
+          <div class="bar"><i></i><i></i><i></i><span>사진</span></div>
+          <div class="file f1"><div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.jpg</span></div>
+          <div class="file f2"><div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.png</span></div>
+        </div>
+        <div class="panel">
+          <div class="icon"><img src="images/icon.png" alt=""></div>
+          <div class="ring"><svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="none" stroke="#FFD84D" stroke-width="3"/><circle class="arc" cx="13" cy="13" r="12" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round" stroke-dasharray="75.4" stroke-dashoffset="75.4" transform="rotate(-90 13 13)"/></svg></div>
+          <div class="rows">
+            <div class="hd">여름 바다.jpg</div>
+            <div class="row"><b style="background:#FF8A5B">J</b>JPG<em>사진</em></div>
+            <div class="row"><b style="background:#4DA3FF">P</b>PNG<em>투명 유지</em></div>
+            <div class="row"><b style="background:#B48CFF">H</b>HEIC<em>작은 용량</em></div>
+            <div class="row"><b style="background:#2BB673">T</b>TIFF<em>인쇄용</em></div>
+            <div class="row"><b style="background:#FF6FB5">G</b>GIF<em>웹용</em></div>
+            <div class="row"><b style="background:#222;color:#fff">P</b>PDF<em>문서</em></div>
+            <div class="row"><b style="background:#8C8C8C">✂</b>자르기<em></em></div>
+          </div>
+          <div class="bubble"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>1개 완료 · 눌러서 보기</div>
+        </div>
+        <div class="opts">
+          <div class="opt">그대로<small>놓기</small></div>
+          <div class="opt">2MB 이하<small>놓기</small></div>
+          <div class="opt">1MB 이하<small>놓기</small></div>
+          <div class="opt">500KB 이하<small>놓기</small></div>
+          <div class="opt">직접 입력…<small>놓기</small></div>
+        </div>
+        <div class="flow"><span>끌어다 대기</span><span>고르기</span><span>놓기</span></div>
+        <div class="hand">
+          <div class="ghost"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div>
+          <svg class="arrow" viewBox="0 0 16 23"><path d="M1.5 1.5v17l4.2-4 3 6.8 2.6-1.1-3-6.7h5.9z" fill="#111" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -282,5 +374,112 @@
   </div>
 </footer>
 
+<script>
+// 첫 화면 시연: 사진을 끌어 탭에 대면 선택판이 펼쳐지고, PNG → 1MB 이하에 놓으면 새 파일이 생긴다.
+// 움직임 줄이기를 켠 사람에게는 고르는 순간에 멈춘 한 장면만 보여 준다.
+(() => {
+  const demo = document.querySelector('.demo');
+  if (!demo || !demo.animate || !window.ResizeObserver) return;
+  const $ = s => demo.querySelector(s), $$ = s => [...demo.querySelectorAll(s)];
+  const stage = $('.stage'), hand = $('.hand'), arrow = $('.arrow'), ghost = $('.ghost'), panel = $('.panel'),
+        icon = $('.icon'), ring = $('.ring'), arc = $('.arc'), bubble = $('.bubble'), opts = $('.opts'),
+        f1 = $('.f1 .thumb'), f2 = $('.f2'), items = $$('.rows > *'), rows = $$('.row'), options = $$('.opt'), flow = $$('.flow span');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches, T = still ? 0 : 1;
+
+  new ResizeObserver(() => { stage.style.transform = `scale(${demo.clientWidth / 720})`; }).observe(demo);
+  let seen = true;
+  new IntersectionObserver(e => { seen = e[0].isIntersecting; }).observe(demo);
+
+  const wait = ms => new Promise(r => setTimeout(r, ms * T));
+  const go = (el, kf, ms, easing = 'ease-out', delay = 0) =>
+    el.animate(kf, { duration: ms * T, delay: delay * T, easing, fill: 'forwards' });
+  const spring = 'cubic-bezier(.3,1.3,.55,1)', calm = 'cubic-bezier(.4,0,.2,1)';
+  let at;
+  const move = (pts, ms, easing = 'ease-in-out') => {
+    const kf = [at, ...pts].map(([x, y]) => ({ transform: `translate(${x}px,${y}px)` }));
+    at = pts[pts.length - 1];
+    return go(hand, kf, ms, easing).finished;
+  };
+  const size = (w, h, ms, easing = spring) => go(panel, [{ width: w + 'px', height: h + 'px' }], ms, easing).finished;
+  const step = i => flow.forEach((s, j) => s.classList.toggle('on', j === i));
+  const pick = (list, i) => list.forEach((el, j) => el.classList.toggle('on', j === i));
+  const press = () => go(arrow, [{ transform: 'scale(1)' }, { transform: 'scale(.82)' }, { transform: 'scale(1)' }], 220);
+
+  async function play() {
+    stage.getAnimations({ subtree: true }).forEach(a => a.cancel());
+    $$('.on, .open').forEach(el => el.classList.remove('on', 'open'));
+    at = [330, 430];
+    step(0);
+
+    // 1. 사진을 집어 탭으로 끌고 간다. 탭 가까이 오면 선택판이 서랍처럼 열린다
+    go(hand, [{ opacity: 0 }, { opacity: 1 }], 250);
+    await move([[108, 152]], 750);
+    await wait(150);
+    press();
+    go(ghost, [{ opacity: 0, transform: 'scale(.9)' }, { opacity: .92, transform: 'scale(1)' }], 160);
+    go(f1, [{ opacity: .45 }], 160);
+    await wait(220);
+    const drag = move([[260, 232], [470, 220], [648, 164]], 1250, 'cubic-bezier(.45,0,.25,1)');
+    await wait(950);
+    go(icon, [{ opacity: 0, transform: 'scale(.85)' }], 120);
+    items.forEach((el, i) => go(el, [{ opacity: 0, transform: 'translateX(14px)' }, { opacity: 1, transform: 'none' }],
+                                380, 'cubic-bezier(.2,.9,.3,1)', 60 + 28 * i));
+    size(164, 348, 420);
+    // 판 위에서는 들고 있는 사진을 작게 줄여 커서 오른쪽 아래로 비켜, 줄 글자를 가리지 않게 한다
+    go(ghost, [{ opacity: .85, transform: 'translate(30px,26px) scale(.6)' }], 300, calm);
+    step(1);
+    await drag;
+
+    // 2. PNG 줄에 올리면 보기 칸이 나오고, 2MB를 지나 1MB 이하에 멈춘다
+    pick(rows, 1);
+    opts.classList.add('open');
+    await wait(450);
+    await move([[476, 199]], 420);
+    pick(options, 1);
+    await wait(200);
+    await move([[464, 235]], 260);
+    pick(options, 2);
+    step(2);
+    if (still) return true;
+    await wait(650);
+
+    // 3. 놓으면 판이 접히고, 탭이 진행 고리를 채운 뒤 완료 말풍선이 나오며 원본 옆에 새 파일이 생긴다
+    press();
+    go(ghost, [{ opacity: 0, transform: 'translate(30px,26px) scale(.2)' }], 220, 'ease-in');
+    go(f1, [{ opacity: 1 }], 200);
+    await wait(160);
+    opts.classList.remove('open');
+    items.forEach((el, i) => go(el, [{ opacity: 0, transform: 'translateX(14px)' }], 140, 'ease-in', 16 * (items.length - 1 - i)));
+    move([[560, 330]], 900);
+    await wait(120);
+    await size(44, 112, 300, calm);
+    pick(rows, -1); pick(options, -1);
+    go(ring, [{ opacity: 1 }], 150);
+    await go(arc, [{ strokeDashoffset: 75.4 }, { strokeDashoffset: 0 }], 800, 'ease-in-out').finished;
+    go(ring, [{ opacity: 0 }], 120);
+    go(bubble, [{ opacity: 0 }, { opacity: 1 }], 200, 'ease-out', 160);
+    go(f2, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)' }], 380, spring, 200);
+    await size(260, 112, 380);
+    await wait(2200);
+
+    // 말풍선이 탭으로 돌아가고, 다음 바퀴를 위해 새 파일을 치운다
+    go(bubble, [{ opacity: 0 }], 120);
+    await size(44, 112, 300, calm);
+    go(icon, [{ opacity: 1, transform: 'none' }], 200);
+    go(hand, [{ opacity: 0 }], 300);
+    await wait(1000);
+    go(f2, [{ opacity: 0 }], 300);
+    await wait(600);
+  }
+
+  (async () => {
+    // 화면 밖이거나 다른 탭에 있으면 다음 바퀴를 시작하지 않는다
+    for (;;) {
+      while (!seen || document.hidden) await new Promise(r => setTimeout(r, 400));
+      if (await play()) break;
+    }
+  })();
+})();
+</script>
 </body>
 </html>
