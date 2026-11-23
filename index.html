@@ -22,7 +22,8 @@
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--body); font-weight: 470; line-height: 1.65; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--body); font-weight: 470; line-height: 1.65;
+         word-break: keep-all; overflow-wrap: break-word; } /* 한글은 낱말 단위로만 줄을 넘긴다 */
   a { color: inherit; }
   img { max-width: 100%; height: auto; display: block; }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
@@ -183,7 +184,7 @@
   <div class="wrap">
     <div>
       <h1>툭 놓으면,<br>바뀐다.</h1>
-      <p class="lead">화면 가장자리에 붙은 작은 탭에 사진이나 PDF를 끌어다 대세요. 선택판이 펼쳐지면 원하는 형식 위에 툭 놓으면 됩니다. 프로그램을 열고 메뉴를 찾고 저장 위치를 고르는 일이 한 번의 끌어다 놓기로 줄어듭니다.</p>
+      <p class="lead">화면 가장자리에 붙은 작은 탭에 사진이나 PDF를 끌어다 대세요.<br>선택판이 펼쳐지면 원하는 형식 위에 툭 놓으면 됩니다.<br>프로그램을 열고 메뉴를 찾고 저장 위치를 고르는 일이 한 번의 끌어다 놓기로 줄어듭니다.</p>
       <div class="downloads">
         <a class="btn main" href="https://github.com/HRYoon0/took/releases/latest/download/Took-mac.zip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
