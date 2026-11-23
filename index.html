@@ -78,12 +78,17 @@
   .win .bar { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1.5px solid var(--line); font-size: 12px; color: var(--muted); }
   .win .bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
   .win .bar span { flex: 1; text-align: center; padding-right: 39px; }
-  .file { position: absolute; top: 56px; width: 100px; text-align: center; font-size: 12px; }
-  .f1 { left: 20px; } .f2 { left: 140px; opacity: 0; }
+  .file { position: absolute; top: 56px; width: 90px; text-align: center; font-size: 12px; }
+  .f1 { left: 14px; } .f3 { left: 114px; } .f2 { left: 214px; opacity: 0; }
+  .file.sel span { background: var(--yellow); }
   .thumb { width: 84px; height: 60px; margin: 0 auto 6px; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
   .thumb svg, .ghost svg { width: 100%; height: 100%; }
   .file span { display: inline-block; padding: 1px 6px; border-radius: 5px; }
   .f2 span { background: var(--yellow); }
+  .thumb.doc { position: relative; width: 48px; background: #fff; }
+  .thumb.doc svg { width: 36px; height: 26px; margin: 7px auto 0; }
+  .thumb.doc b { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); padding: 0 4px; border-radius: 3px;
+                 background: #E5483B; color: #fff; font-size: 10px; font-weight: 400; }
   .panel { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 112px; overflow: hidden;
            background: var(--cream); border: 2px solid var(--ink); border-right: 0; border-radius: 18px 0 0 18px; }
   .icon, .ring { position: absolute; right: 0; top: 50%; width: 42px; height: 42px; margin-top: -21px; display: grid; place-items: center; }
@@ -111,8 +116,14 @@
   .flow span.on { background: var(--yellow); color: var(--ink); }
   .hand { position: absolute; left: 0; top: 0; opacity: 0; transform: translate(330px, 430px); }
   .arrow { position: absolute; left: -2px; top: -2px; width: 19px; height: 27px; transform-origin: 2px 2px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.3)); }
-  .ghost { position: absolute; left: -42px; top: -30px; width: 84px; height: 60px; border: 1.5px solid var(--ink); border-radius: 6px;
-           overflow: hidden; opacity: 0; box-shadow: 0 10px 20px rgba(0,0,0,.16); }
+  .ghost { position: absolute; left: -42px; top: -30px; width: 84px; height: 60px; opacity: 0; }
+  .ghost i { position: absolute; left: 0; top: 0; right: 0; bottom: 0; border: 1.5px solid var(--ink); border-radius: 6px;
+             overflow: hidden; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,.16); }
+  .ghost i.back { transform: translate(8px, -8px); display: none; }
+  .ghost em { display: none; position: absolute; right: -10px; top: -14px; width: 22px; height: 22px; border-radius: 50%;
+              background: #E5483B; color: #fff; font-style: normal; font-size: 12px; place-items: center; }
+  .ghost.multi i.back { display: block; }
+  .ghost.multi em { display: grid; }
 
   /* 단계 */
   .head { margin-bottom: 36px; }
@@ -197,7 +208,7 @@
       </div>
       <p class="ver">무료 · 버전 0.1.0 · <a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
     </div>
-    <div class="shot demo" role="img" aria-label="사진을 끌어 화면 오른쪽 끝 탭에 가져가면 선택판이 펼쳐지고, PNG 줄의 1MB 이하에 놓으면 원본 옆에 PNG 파일이 새로 생기는 모습">
+    <div class="shot demo" role="img" aria-label="사진을 끌어 화면 오른쪽 끝 탭에 가져가면 선택판이 펼쳐지고, PNG 줄의 1MB 이하에 놓으면 PNG 파일이, 사진 두 장을 PDF 줄의 한 권으로에 놓으면 PDF 한 권이 원본 옆에 생기는 모습">
       <div class="stage" aria-hidden="true">
         <svg width="0" height="0" style="position:absolute"><defs>
           <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FC9FF"/><stop offset="1" stop-color="#FFD9C2"/></linearGradient>
@@ -206,12 +217,18 @@
             <path d="M0 36Q14 30 28 36T56 36T84 34V60H0Z" fill="#4DA3FF"/><path d="M0 44Q14 39 28 44T56 44T84 42V60H0Z" fill="#2E86E0"/>
             <path d="M0 52Q21 46 42 52T84 50V60H0Z" fill="#7CCB8A"/>
           </symbol>
+          <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B9A4F0"/><stop offset="1" stop-color="#FFC59A"/></linearGradient>
+          <symbol id="dusk" viewBox="0 0 84 60">
+            <rect width="84" height="60" fill="url(#sky2)"/><circle cx="30" cy="34" r="10" fill="#FF8A5B"/>
+            <path d="M0 40Q20 30 42 38T84 32V60H0Z" fill="#6B5B95"/><path d="M0 50Q24 42 50 49T84 46V60H0Z" fill="#43376B"/>
+          </symbol>
         </defs></svg>
         <div class="blob b1"></div><div class="blob b2"></div>
         <div class="win">
           <div class="bar"><i></i><i></i><i></i><span>사진</span></div>
           <div class="file f1"><div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.jpg</span></div>
-          <div class="file f2"><div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.png</span></div>
+          <div class="file f3"><div class="thumb"><svg viewBox="0 0 84 60"><use href="#dusk"/></svg></div><span>노을.jpg</span></div>
+          <div class="file f2"></div>
         </div>
         <div class="panel">
           <div class="icon"><img src="images/icon.png" alt=""></div>
@@ -229,15 +246,10 @@
           <div class="bubble"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>1개 완료 · 눌러서 보기</div>
         </div>
         <div class="opts">
-          <div class="opt">그대로<small>놓기</small></div>
-          <div class="opt">2MB 이하<small>놓기</small></div>
-          <div class="opt">1MB 이하<small>놓기</small></div>
-          <div class="opt">500KB 이하<small>놓기</small></div>
-          <div class="opt">직접 입력…<small>놓기</small></div>
         </div>
         <div class="flow"><span>끌어다 대기</span><span>고르기</span><span>놓기</span></div>
         <div class="hand">
-          <div class="ghost"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div>
+          <div class="ghost"><i class="back"><svg viewBox="0 0 84 60"><use href="#dusk"/></svg></i><i><svg viewBox="0 0 84 60"><use href="#sea"/></svg></i><em>2</em></div>
           <svg class="arrow" viewBox="0 0 16 23"><path d="M1.5 1.5v17l4.2-4 3 6.8 2.6-1.1-3-6.7h5.9z" fill="#111" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
         </div>
       </div>
@@ -377,16 +389,29 @@
 </footer>
 
 <script>
-// 첫 화면 시연: 사진을 끌어 탭에 대면 선택판이 펼쳐지고, PNG → 1MB 이하에 놓으면 새 파일이 생긴다.
-// 움직임 줄이기를 켠 사람에게는 고르는 순간에 멈춘 한 장면만 보여 준다.
+// 첫 화면 시연: 두 장면을 번갈아 보여 준다.
+//  ① 사진 한 장을 탭에 대고 PNG → 1MB 이하에 놓으면 원본 옆에 PNG가 생긴다.
+//  ② 사진 두 장을 골라 PDF → 한 권으로에 놓으면 PDF 한 권이 생긴다.
+// 줄·보기 이름과 칸 위치는 앱(Shelf.swift Layout, Row.choices, Prefs 기본 용량)과 같다.
+// 움직임 줄이기를 켠 사람에게는 ①의 고르는 순간에 멈춘 한 장면만 보여 준다.
 (() => {
   const demo = document.querySelector('.demo');
   if (!demo || !demo.animate || !window.ResizeObserver) return;
   const $ = s => demo.querySelector(s), $$ = s => [...demo.querySelectorAll(s)];
   const stage = $('.stage'), hand = $('.hand'), arrow = $('.arrow'), ghost = $('.ghost'), panel = $('.panel'),
-        icon = $('.icon'), ring = $('.ring'), arc = $('.arc'), bubble = $('.bubble'), opts = $('.opts'),
-        f1 = $('.f1 .thumb'), f2 = $('.f2'), items = $$('.rows > *'), rows = $$('.row'), options = $$('.opt'), flow = $$('.flow span');
+        icon = $('.icon'), ring = $('.ring'), arc = $('.arc'), bubble = $('.bubble'), opts = $('.opts'), head = $('.rows .hd'),
+        files = [$('.f1'), $('.f3')], f2 = $('.f2'), items = $$('.rows > *'), rows = $$('.row'), flow = $$('.flow span');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches, T = still ? 0 : 1;
+
+  // 커서가 집는 사진 위치, 선택판 줄(번호·세로 위치), 보기 칸 위치와 지나가는 보기 순서, 결과 파일
+  const SCENES = [
+    { head: '여름 바다.jpg', picks: [[97, 152]], row: 1, rowY: 164, top: 135, path: [1, 2],
+      opts: ['그대로', '2MB 이하', '1MB 이하', '500KB 이하', '직접 입력…'],
+      result: '<div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.png</span>' },
+    { head: '파일 2개', picks: [[97, 152], [197, 152]], row: 5, rowY: 332, top: 199, path: [1, 0],
+      opts: ['한 권으로', '낱장으로', '한 권 · 5MB 이하', '한 권 · 2MB 이하', '한 권 · 직접 입력…'],
+      result: '<div class="thumb doc"><svg viewBox="0 0 84 60"><use href="#sea"/></svg><b>PDF</b></div><span>여름 바다 외 1개.pdf</span>' },
+  ];
 
   new ResizeObserver(() => { stage.style.transform = `scale(${demo.clientWidth / 720})`; }).observe(demo);
   let seen = true;
@@ -407,21 +432,32 @@
   const pick = (list, i) => list.forEach((el, j) => el.classList.toggle('on', j === i));
   const press = () => go(arrow, [{ transform: 'scale(1)' }, { transform: 'scale(.82)' }, { transform: 'scale(1)' }], 220);
 
-  async function play() {
+  async function play(sc) {
     stage.getAnimations({ subtree: true }).forEach(a => a.cancel());
-    $$('.on, .open').forEach(el => el.classList.remove('on', 'open'));
+    $$('.on, .open, .sel').forEach(el => el.classList.remove('on', 'open', 'sel'));
+    head.textContent = sc.head;
+    opts.innerHTML = sc.opts.map(t => `<div class="opt">${t}<small>놓기</small></div>`).join('');
+    opts.style.top = sc.top + 'px';
+    f2.innerHTML = sc.result;
+    ghost.classList.toggle('multi', sc.picks.length > 1);
+    const options = $$('.opt'), picked = files.slice(0, sc.picks.length).map(f => f.firstElementChild);
     at = [330, 430];
     step(0);
 
-    // 1. 사진을 집어 탭으로 끌고 간다. 탭 가까이 오면 선택판이 서랍처럼 열린다
+    // 1. 사진을 눌러 고르고(두 장이면 차례로), 탭으로 끌고 간다. 탭 가까이 오면 선택판이 서랍처럼 열린다
     go(hand, [{ opacity: 0 }, { opacity: 1 }], 250);
-    await move([[108, 152]], 750);
-    await wait(150);
-    press();
+    for (let i = 0; i < sc.picks.length; i++) {
+      await move([sc.picks[i]], i ? 450 : 750);
+      await wait(150);
+      press();
+      files[i].classList.add('sel');
+      if (i < sc.picks.length - 1) await wait(250);
+    }
     go(ghost, [{ opacity: 0, transform: 'scale(.9)' }, { opacity: .92, transform: 'scale(1)' }], 160);
-    go(f1, [{ opacity: .45 }], 160);
+    picked.forEach(t => go(t, [{ opacity: .45 }], 160));
     await wait(220);
-    const drag = move([[260, 232], [470, 220], [648, 164]], 1250, 'cubic-bezier(.45,0,.25,1)');
+    const x = at[0];
+    const drag = move([[x + 163, 240], [470, (240 + sc.rowY) / 2], [648, sc.rowY]], 1250, 'cubic-bezier(.45,0,.25,1)');
     await wait(950);
     go(icon, [{ opacity: 0, transform: 'scale(.85)' }], 120);
     items.forEach((el, i) => go(el, [{ opacity: 0, transform: 'translateX(14px)' }, { opacity: 1, transform: 'none' }],
@@ -432,15 +468,16 @@
     step(1);
     await drag;
 
-    // 2. PNG 줄에 올리면 보기 칸이 나오고, 2MB를 지나 1MB 이하에 멈춘다
-    pick(rows, 1);
+    // 2. 줄에 올리면 보기 칸이 나오고, 보기 하나를 지나 고를 보기에 멈춘다
+    pick(rows, sc.row);
     opts.classList.add('open');
     await wait(450);
-    await move([[476, 199]], 420);
-    pick(options, 1);
+    const optY = i => sc.top + 28 + 36 * i;
+    await move([[476, optY(sc.path[0])]], 420);
+    pick(options, sc.path[0]);
     await wait(200);
-    await move([[464, 235]], 260);
-    pick(options, 2);
+    await move([[464, optY(sc.path[1])]], 260);
+    pick(options, sc.path[1]);
     step(2);
     if (still) return true;
     await wait(650);
@@ -448,14 +485,15 @@
     // 3. 놓으면 판이 접히고, 탭이 진행 고리를 채운 뒤 완료 말풍선이 나오며 원본 옆에 새 파일이 생긴다
     press();
     go(ghost, [{ opacity: 0, transform: 'translate(30px,26px) scale(.2)' }], 220, 'ease-in');
-    go(f1, [{ opacity: 1 }], 200);
+    picked.forEach(t => go(t, [{ opacity: 1 }], 200));
+    files.forEach(f => f.classList.remove('sel'));
     await wait(160);
     opts.classList.remove('open');
     items.forEach((el, i) => go(el, [{ opacity: 0, transform: 'translateX(14px)' }], 140, 'ease-in', 16 * (items.length - 1 - i)));
     move([[560, 330]], 900);
     await wait(120);
     await size(44, 112, 300, calm);
-    pick(rows, -1); pick(options, -1);
+    pick(rows, -1);
     go(ring, [{ opacity: 1 }], 150);
     await go(arc, [{ strokeDashoffset: 75.4 }, { strokeDashoffset: 0 }], 800, 'ease-in-out').finished;
     go(ring, [{ opacity: 0 }], 120);
@@ -476,9 +514,9 @@
 
   (async () => {
     // 화면 밖이거나 다른 탭에 있으면 다음 바퀴를 시작하지 않는다
-    for (;;) {
+    for (let n = 0; ; n++) {
       while (!seen || document.hidden) await new Promise(r => setTimeout(r, 400));
-      if (await play()) break;
+      if (await play(SCENES[n % SCENES.length])) break;
     }
   })();
 })();
