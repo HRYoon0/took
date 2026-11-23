@@ -285,7 +285,7 @@
       <div class="card">
         <span class="chip" style="background:#4DA3FF">↓</span>
         <h3>용량 맞추기</h3>
-        <p>"2MB 이하", "500KB 이하"처럼 정해 두면 화질을 먼저 조금 내리고 그래도 크면 크기를 줄여 맞춥니다. 학교 게시판이나 신청서 첨부 용량에 맞출 때 편합니다.</p>
+        <p>"3MB 이하", "300KB 이하"처럼 정해 두면 화질을 먼저 조금 내리고 그래도 크면 크기를 줄여 맞춥니다. 학교 게시판이나 신청서 첨부 용량에 맞출 때 편합니다.</p>
       </div>
       <div class="card">
         <span class="chip" style="background:#222;color:#fff">P</span>
@@ -406,10 +406,10 @@
   // 커서가 집는 사진 위치, 선택판 줄(번호·세로 위치), 보기 칸 위치와 지나가는 보기 순서, 결과 파일
   const SCENES = [
     { head: '여름 바다.jpg', picks: [[97, 152]], row: 1, rowY: 164, top: 135, path: [1, 2],
-      opts: ['그대로', '2MB 이하', '1MB 이하', '500KB 이하', '직접 입력…'],
+      opts: ['그대로', '3MB 이하', '1MB 이하', '300KB 이하', '직접 입력…'],
       result: '<div class="thumb"><svg viewBox="0 0 84 60"><use href="#sea"/></svg></div><span>여름 바다.png</span>' },
     { head: '파일 2개', picks: [[97, 152], [197, 152]], row: 5, rowY: 332, top: 199, path: [1, 0],
-      opts: ['한 권으로', '낱장으로', '한 권 · 5MB 이하', '한 권 · 2MB 이하', '한 권 · 직접 입력…'],
+      opts: ['한 권으로', '낱장으로', '한 권 · 10MB 이하', '한 권 · 3MB 이하', '한 권 · 직접 입력…'],
       result: '<div class="thumb doc"><svg viewBox="0 0 84 60"><use href="#sea"/></svg><b>PDF</b></div><span>여름 바다 외 1개.pdf</span>' },
   ];
 
