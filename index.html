@@ -206,7 +206,7 @@
           <span>Windows용 받기<small>Windows 10·11 64비트 · 74MB</small></span>
         </a>
       </div>
-      <p class="ver">무료 · 버전 1.0.1 · <a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
+      <p class="ver">무료 · 버전 1.0.1 · <span id="dl-count" hidden>지금까지 <b id="dl-num">-</b>번 받음 · </span><a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
     </div>
     <div class="shot demo" role="img" aria-label="사진을 끌어 화면 오른쪽 끝 탭에 가져가면 선택판이 펼쳐지고, PNG 줄의 1MB 이하에 놓으면 PNG 파일이, 사진 두 장을 PDF 줄의 한 권으로에 놓으면 PDF 한 권이 원본 옆에 생기는 모습">
       <div class="stage" aria-hidden="true">
@@ -390,7 +390,28 @@
 </footer>
 
 <script>
-// 방문자 수: Abacus 카운터(무가입, CORS 허용). 브라우저당 하루 한 번만 센다(새로고침으로 늘지 않음).
+// Windows로 들어오면 Windows 받기 버튼을 노란 주 버튼으로 바꾸고 앞에 둔다.
+(() => {
+  const win = (navigator.userAgentData?.platform || navigator.userAgent).includes('Win');
+  const [mac, winBtn] = document.querySelectorAll('.downloads .btn');
+  if (!win || !winBtn) return;
+  mac.classList.remove('main');
+  winBtn.classList.add('main');
+  winBtn.parentNode.prepend(winBtn);
+})();
+
+// 내려받은 횟수: GitHub 릴리스 파일마다 기록된 횟수를 모든 버전에 걸쳐 더한다.
+// ponytail: GitHub API는 IP당 시간당 60회 제한. 학교처럼 IP를 같이 쓰면 넘을 수 있고, 그때는 숨긴 채 둔다.
+fetch('https://api.github.com/repos/HRYoon0/took/releases?per_page=100', { signal: AbortSignal.timeout?.(5000) })
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(list => {
+    const n = list.flatMap(r => r.assets).reduce((s, a) => s + a.download_count, 0);
+    if (!n) return;
+    document.getElementById('dl-num').textContent = n.toLocaleString('ko-KR');
+    document.getElementById('dl-count').hidden = false;
+  }).catch(() => {});
+
+// 방문자 수:Abacus 카운터(무가입, CORS 허용). 브라우저당 하루 한 번만 센다(새로고침으로 늘지 않음).
 // 로컬에서 볼 때는 세지 않고 읽기만 한다. 서비스가 죽거나 느리면 숫자 칸을 숨긴 채 둔다.
 (() => {
   const API = 'https://abacus.jasoncameron.dev', NS = 'hryoon0-took';
