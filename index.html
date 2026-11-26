@@ -64,6 +64,10 @@
   /* 두 버튼을 위아래로 두고, 넓은 쪽 너비에 맞춘다(그리드 칸은 기본으로 칸 너비까지 늘어난다) */
   .downloads { display: grid; grid-template-columns: max-content; gap: 12px; }
   .ver { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+  /* 내려받은 횟수: 숫자만 제목 글꼴로 크게, 노란 형광펜 칠 */
+  .count { margin: 22px 0 0; font-size: 16px; }
+  .count b { margin: 0 3px; padding: 0 4px; font-family: var(--title); font-size: 36px; font-weight: 400; line-height: 1;
+             font-variant-numeric: tabular-nums; background: linear-gradient(transparent 58%, var(--yellow) 58%, var(--yellow) 92%, transparent 92%); }
   .shot { border: 2px solid var(--ink); border-radius: 22px; overflow: hidden; background: var(--cream); }
 
   /* 첫 화면 움직이는 시연: 720×450 무대를 칸 너비에 맞춰 통째로 줄인다(크기·색은 앱 Layout·Palette 값) */
@@ -217,7 +221,8 @@
           <span>Windows용 받기<small>Windows 10·11 64비트 · 74MB</small></span>
         </a>
       </div>
-      <p class="ver">무료 · 버전 1.0.1 · <span id="dl-count" hidden>지금까지 <b id="dl-num">-</b>번 받음 · </span><a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
+      <p class="count" id="dl-count" hidden>지금까지 <b id="dl-num">-</b>번 내려받았어요</p>
+      <p class="ver">무료 · 버전 1.0.1 · <a href="#install">설치 방법</a> · <a href="https://github.com/HRYoon0/took/releases">이전 버전</a></p>
     </div>
     <div class="shot demo" role="img" aria-label="사진을 끌어 화면 오른쪽 끝 탭에 가져가면 선택판이 펼쳐지고, PNG 줄의 1MB 이하에 놓으면 PNG 파일이, 사진 두 장을 PDF 줄의 한 권으로에 놓으면 PDF 한 권이 원본 옆에 생기는 모습">
       <div class="stage" aria-hidden="true">
@@ -444,15 +449,26 @@
 })();
 
 // 내려받은 횟수: GitHub 릴리스 파일마다 기록된 횟수를 모든 버전에 걸쳐 더한다.
-// ponytail: GitHub API는 IP당 시간당 60회 제한. 학교처럼 IP를 같이 쓰면 넘을 수 있고, 그때는 숨긴 채 둔다.
-fetch('https://api.github.com/repos/HRYoon0/took/releases?per_page=100', { signal: AbortSignal.timeout?.(5000) })
-  .then(r => r.ok ? r.json() : Promise.reject(r.status))
-  .then(list => {
-    const n = list.flatMap(r => r.assets).reduce((s, a) => s + a.download_count, 0);
+// GitHub API는 IP당 시간당 60회 제한이라, 같은 브라우저는 1시간 동안 저장해 둔 값을 쓰고
+// 한도에 걸리거나 실패하면 전에 받은 값을, 그것도 없으면 숨긴 채 둔다.
+(() => {
+  const KEY = 'took-dl-count';
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  const show = n => {
     if (!n) return;
     document.getElementById('dl-num').textContent = n.toLocaleString('ko-KR');
     document.getElementById('dl-count').hidden = false;
-  }).catch(() => {});
+  };
+  if (saved && Date.now() - saved.t < 3600e3) return show(saved.n);
+  fetch('https://api.github.com/repos/HRYoon0/took/releases?per_page=100', { signal: AbortSignal.timeout?.(5000) })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(list => {
+      const n = list.flatMap(r => r.assets).reduce((s, a) => s + a.download_count, 0);
+      try { localStorage.setItem(KEY, JSON.stringify({ n, t: Date.now() })); } catch (e) {}
+      show(n);
+    }).catch(() => { if (saved) show(saved.n); });
+})();
 
 // 방문자 수:Abacus 카운터(무가입, CORS 허용). 브라우저당 하루 한 번만 센다(새로고침으로 늘지 않음).
 // 로컬에서 볼 때는 세지 않고 읽기만 한다. 서비스가 죽거나 느리면 숫자 칸을 숨긴 채 둔다.
