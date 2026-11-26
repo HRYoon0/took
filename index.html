@@ -383,10 +383,33 @@
 
 <footer>
   <div class="wrap">
-    <span>Took 1.0.1 · 만든 사람 <a href="https://github.com/HRYoon0">HRYoon0</a></span>
+    <span>Took 1.0.1 · 제작자: 양산 황산초등학교 <a href="https://github.com/HRYoon0">윤희류</a></span>
+    <span id="visits" hidden>방문자 오늘 <b id="visits-today">-</b> · 전체 <b id="visits-total">-</b></span>
     <span>글꼴: 고운돋움(SIL Open Font License 1.1) · Pretendard · Windows판 PDF 처리: PDFsharp(MIT)</span>
   </div>
 </footer>
+
+<script>
+// 방문자 수: Abacus 카운터(무가입, CORS 허용). 브라우저당 하루 한 번만 센다(새로고침으로 늘지 않음).
+// 로컬에서 볼 때는 세지 않고 읽기만 한다. 서비스가 죽거나 느리면 숫자 칸을 숨긴 채 둔다.
+(() => {
+  const API = 'https://abacus.jasoncameron.dev', NS = 'hryoon0-took';
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
+  const mark = 'visited-' + day;
+  let counted = false;
+  try { counted = localStorage.getItem(mark) === '1'; } catch (e) {}
+  const op = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || counted) ? 'get' : 'hit';
+  const req = key => fetch(`${API}/${op}/${NS}/${key}`, { signal: AbortSignal.timeout?.(5000) })
+    .then(r => r.ok ? r.json() : r.status === 404 ? { value: 0 } : Promise.reject(r.status));
+  Promise.all([req('day-' + day), req('total')]).then(([d, t]) => {
+    if (op === 'hit') try { localStorage.setItem(mark, '1'); } catch (e) {}
+    const n = x => Number(x.value || 0).toLocaleString('ko-KR');
+    document.getElementById('visits-today').textContent = n(d);
+    document.getElementById('visits-total').textContent = n(t);
+    document.getElementById('visits').hidden = false;
+  }).catch(() => {});
+})();
+</script>
 
 <script>
 // 첫 화면 시연: 두 장면을 번갈아 보여 준다.
